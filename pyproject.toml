@@ -1,0 +1,25 @@
+[project]
+name = "llm_augmented_work_search"
+version = "0.1.0"
+description = "LLM-augmented vacancy filtering pipeline"
+requires-python = ">=3.10"
+dependencies = [
+    "fastapi>=0.104.0",
+    "uvicorn[standard]>=0.24.0",
+    "sqlalchemy>=2.0.23",
+    "alembic>=1.12.1",
+    "pydantic>=2.5.0",
+    "pydantic-settings>=2.1.0",
+    "httpx>=0.25.0",
+    "ollama>=0.1.7",
+    "pyyaml>=6.0.3",
+    "beautifulsoup4>=4.12.2",
+    "requests>=2.31.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7.4.0", "ruff>=0.1.6"]
+
+[tool.ruff]
+line-length = 99
+target-version = "py310"

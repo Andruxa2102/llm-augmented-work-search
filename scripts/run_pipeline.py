@@ -1,6 +1,8 @@
-import logging, yaml, json
+import logging, json
+import sys
 from datetime import datetime, timezone
 from src.adapters.SourceX import SourceXAdapter
+from src.config.loader import load_sources_config, ConfigLoadError
 from src.llm.pure_python_agent import PurePythonFilterAgent
 from src.storage.db import SessionLocal, engine
 from src.storage.models import RawVacancy, FilteredVacancy, Base
@@ -8,10 +10,13 @@ from src.storage.models import RawVacancy, FilteredVacancy, Base
 logging.basicConfig(level=logging.INFO, format="%(asctime)s | %(levelname)s | %(message)s")
 logger = logging.getLogger(__name__)
 
-def run():
-    # 1. Инициализация
-    with open("config/sources.yaml") as f:
-        sources = yaml.safe_load(f)["sources"]
+def main():
+    # 1. Initialization
+    try:
+        sources = load_sources_config("config/sources.yaml")
+    except ConfigLoadError as e:
+        logging.critical(f"Pipeline aborted: {e}")
+        sys.exit(1)
     Base.metadata.create_all(engine)  # Для MVP. В продакшене → alembic upgrade head
     adapter = SourceXAdapter(sources["SourceX"])
     llm = PurePythonFilterAgent()
@@ -44,4 +49,4 @@ def run():
     logger.info(f"Processed: {len(results)}. Passed: {sum(1 for r in results if r['llm_pass'])}")
 
 if __name__ == "__main__":
-    run()
+    main()

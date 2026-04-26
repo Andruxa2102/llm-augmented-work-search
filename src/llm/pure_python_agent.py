@@ -6,7 +6,7 @@ from .agent_interface import LLMFilterAgent
 logger = logging.getLogger(__name__)
 
 class PurePythonFilterAgent(LLMFilterAgent):
-    def __init__(self, cfg_path: str = "config/llm.yaml"):
+    def __init__(self, cfg_path: str = "../config/llm.yaml"):
         with open(cfg_path) as f: self.cfg = yaml.safe_load(f)
 
     def evaluate(self, vacancy: Dict[str, Any]) -> Dict[str, Any]:

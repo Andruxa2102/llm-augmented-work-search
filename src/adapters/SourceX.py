@@ -1,15 +1,18 @@
 import time, random, httpx
 from typing import List, Dict
 from .base import JobSource
+from ..config.models import SourceConfig
+
 
 class SourceXAdapter(JobSource):
     source_name = "SourceX"
-    def __init__(self, cfg: Dict):
+    def __init__(self, cfg: SourceConfig):
         self.cfg = cfg
 
     def fetch_raw(self) -> List[Dict]:
-        time.sleep(random.uniform(self.cfg.get("rate_limit",{}).get("min_delay_s",2),
-                                  self.cfg.get("rate_limit",{}).get("max_delay_s",5)))
+        min_delay = self.cfg.rate_limit.min_delay_s
+        max_delay = self.cfg.rate_limit.max_delay_s
+        time.sleep(random.uniform(min_delay, max_delay))
         # Здесь будет реальный requests.get + bs4 парсинг
         # Для MVP возвращаем эмуляцию:
         return [

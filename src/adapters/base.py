@@ -14,15 +14,17 @@ class JobSource(ABC):
         pass
 
     def normalize(self, raw_item: Dict) -> Dict:
-        now = datetime.now(timezone.utc).isoformat()
+        now = datetime.now(timezone.utc)
         raw_id = self._generate_id(raw_item)
         return {
-            "source": self.source_name, "raw_id": raw_id,
+            "source": self.source_name,
+            "id": raw_id,
             "title": raw_item.get("title", "").strip(),
             "company": raw_item.get("company", "Unknown").strip(),
             "url": raw_item.get("url", "").strip(),
             "description": raw_item.get("description", "").strip(),
-            "fetched_at": now, "raw_data": str(raw_item)
+            "fetched_at": now,
+            "raw_data": str(raw_item)
         }
 
     @staticmethod
